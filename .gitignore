@@ -1,2 +1,3 @@
-18_01_2023_session_6/DJI_0065
-18_01_2023_session_6/DJI_0067
+/data
+/autonomous_navigation/__pycache__
+yolov8n.pt

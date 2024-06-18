@@ -2,25 +2,21 @@
 
 # import the necessary packages
 import os
-from ultralytics import YOLO
-from PIL import Image
 import numpy as np
-import cv2
-import requests
 from io import BytesIO
-import matplotlib.pyplot as plt
 import pandas as pd
-import math
-from geopy import distance
 from datetime import datetime
 from datetime import timedelta
 import pysrt 
-import xarray as xr
 import time
+import xarray as xr
 
-file_location = "/18_01_2023_session_6/" # path to original flight data
+file_location = "/users/PAS2136/kline377/kenya_drones/data/18_01_2023_session_6/"
+# file_location = "/18_01_2023_session_6/" # path to original flight data
 file_name = "Jan-18th-2023-12-09PM-Flight-Airdata.csv" # file name of telemetry data
 flight_record = pd.read_csv(file_location+file_name) # read in telemetry data
+
+save_location = "/users/PAS2136/kline377/kenya_drones/simulator/data/" # path to save cube data
 
 # Note on frames: 
 # - Airdata exports data for every 100 ms, or 10 per second, or 600 per minute
@@ -36,7 +32,7 @@ video_frames = {keys: [] for keys in video_files}
 for video_file in video_files:
     frames = os.listdir(file_location + video_file + '/frames')
     frames = frames[3::3] # get every third frame
-    video_frames[video_file] = frames
+    video_frames[video_file] = frames 
 
 # get start and end times of video from srt file
 start_end_times = {keys: [] for keys in video_files}
@@ -83,10 +79,11 @@ for video_file in video_files:
 
     flight_record_cropped = flight_record_cropped.drop_duplicates(subset=['datetime(utc)']) # get 1 second intervals
     flight_record_dict[video_file] = flight_record_cropped
+
     print("Video file: ", video_file, " Length of flight record: ", len(flight_record_dict[video_file]), 
           " Length of video: ", str(timedelta(seconds=(len(flight_record_dict[video_file])))))
     
-    # get degree ranges for each of the cardinal directions 
+# get degree ranges for each of the cardinal directions 
 directions = np.arange(0, 360, 45)
 heading_ranges = []
 for i in directions:
@@ -123,14 +120,20 @@ ac_dict = {keys: [] for keys in video_files}
 cube_dict = {keys: [] for keys in video_files}
 path_dict = {keys: [] for keys in video_files}
 
-for video in flight_record_dict:
-#for video_file in ['DJI_0063']:
+#for video_file in flight_record_dict:
+for video_file in ['DJI_0063']:
     #print("video file: ", video_file)
-    ac = flight_record_dict[video][['datetime(utc)', 'latitude', 'longitude', 'height_above_takeoff(feet)', 'gimbal_heading(degrees)', 'frame']]
+    ac = flight_record_dict[video_file][['datetime(utc)', 'latitude', 'longitude', 'height_above_takeoff(feet)', 'gimbal_heading(degrees)', 'frame']]
     ac['height_above_takeoff(meters)'] = ac['height_above_takeoff(feet)'] * 0.3048 # convert to meters
     ac = ac.drop(columns=['height_above_takeoff(feet)']) # drop columns that are not needed
     ac['heading_direction'] = ac['gimbal_heading(degrees)'].apply(get_direction)
-    ac.to_csv(file_location + video_file + "/" + video_file + "_flight_record.csv", index=False)
+
+    # add full path to video file
+    ac['frame'] = file_location + video_file + '/frames/' + ac['frame']
+
+    # save flight record as csv file
+    ac.to_csv(save_location + video_file + "/" + video_file + "_flight_record.csv", index=False)
+
     ac_dict[video_file] = ac
 
     ac = ac.reset_index(drop=True)
@@ -148,7 +151,7 @@ for video in flight_record_dict:
     for i in range(len(squares_latitude)-1):
         for j in range(len(squares_longitude)-1):
             squares.append((squares_latitude[i], squares_longitude[j], squares_latitude[i+1], squares_longitude[j+1]))
-    print("Number of latitude squares: ", len(squares_latitude), "Number of longitude squares: ", len(squares_longitude))
+    # print("Number of latitude squares: ", len(squares_latitude), "Number of longitude squares: ", len(squares_longitude))
 
     # create cube
     latitudes = squares_latitude # coordinate variables
@@ -169,10 +172,10 @@ for video in flight_record_dict:
         t = idx
         #print("time: ", t)
         lat, long, head = row['latitude'], row['longitude'], row['heading_direction']
-        print("lat: ", lat, "long: ", long)
+        # print("lat: ", lat, "long: ", long)
         ilat = list(cube.latitude.values).index(cube.sel(latitude=lat, method='nearest').latitude)
         ilon = list(cube.longitude.values).index(cube.sel(longitude=long, method='nearest').longitude)
-        print("lat index: ", ilat, "long index: ", ilon)
+        # print("lat index: ", ilat, "long index: ", ilon)
         itime= list(cube.time.values).index(cube.sel(time=t).time)
         iheading = list(cube.heading.values).index(cube.sel(heading=head).heading)
         #print("long: ", ilon, "lat: ", ilat, "time: ", itime, "heading: ",iheading)
@@ -180,7 +183,12 @@ for video in flight_record_dict:
         #print(cube[ilon, ilat, itime, iheading])
         #print(row['frame'])
         path.append([ilat, ilon, itime, iheading])
+
     path_dict[video_file] = path # save path to dictionary
+   
+    # save cube
+    cube.name = 'cube'
     # save cube as netcdf file
-    cube.to_netcdf(file_location + video_file + "/" + video_file + "_cube.nc")
-    
+    cube.to_netcdf(save_location + video_file + "/" + video_file + "_cube.nc")
+    # save cube as csv file
+    cube.to_dataframe().to_csv(save_location + video_file + "/" + video_file + "_cube.csv")

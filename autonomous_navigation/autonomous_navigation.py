@@ -10,8 +10,9 @@ import cv2
 import autonomous_herd_tracking as aht # Replace with your own path
 
 # Load the autonomy cube data to test the autonomous navigation policy on
-file_location = 'autonomy_cubes/'
-video_file = 'DJI_0065' 
+file_location = 'data/'
+video_file = 'DJI_0063' 
+frame_location = '/users/PAS2136/kline377/kenya_drones/data/18_01_2023_session_6/' + video_file + '/frames/'
 autonomy_cube = pd.read_csv(file_location + video_file + "/" + video_file + "_flight_record.csv")
 cube = xr.open_dataset(file_location + video_file + "/" + video_file + "_cube.nc")
 
@@ -21,10 +22,10 @@ count_wrong = 0
 direction_counts = {'Move forward': 0, 'Move backward': 0, 'Move left': 0, 'Move right': 0}
 
 # Select range of data to test the autonomous navigation policy on
-duration = 100
+duration = 20
 
 # create a dataframe to store the results
-df1 = pd.DataFrame(columns=['Prediction', 'Correct'])
+df1 = pd.DataFrame(columns=['pred', 'correct'])
 results = pd.DataFrame(columns=['# of actions that differ', '% of frames with differing actions'])
 count_correct = 0
 count_wrong = 0
@@ -32,11 +33,11 @@ count_wrong = 0
 for t in range(duration):
     itime = t
     time = t
-    frame = autonomy_cube.iloc[itime]
+    frame = autonomy_cube.iloc[itime]['frame']
+    #image = cv2.imread(frame)
 
-    image = cv2.imread(frame)
-
-    prediction, correct, current_loc, [lat, log, alt, heading] = aht.autonomous_navigation(image)
+    # get the prediction and correct action from the selected autonomous navigation policy
+    prediction, correct, current_loc, [lat, log, alt, heading] = aht.autonomous_navigation(frame, t, cube, autonomy_cube, direction_counts)
 
     df1.loc[len(df1)] = [prediction, correct]
 
@@ -69,3 +70,8 @@ print("recall: ", tp/(tp+fn))
 
 f1 = 2 *(precision*recall)/(precision + recall)
 print("f1: ", f1)
+
+# store stats to dataframe
+stats = pd.DataFrame(columns=['Accuracy', 'Precision', 'Recall', 'F1 Score'])
+stats.loc[len(stats)] = [accuracy, precision, recall, f1]
+stats.to_csv('results.csv')
