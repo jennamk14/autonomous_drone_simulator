@@ -1,0 +1,65 @@
+---
+abstract: Autonomous drone mission simulator
+authors:
+  - family-names: Kline
+    given-names: <Jenna M.>
+    orcid: https://orcid.org/<0009-0006-7301-5774>
+cff-version: 1.2.0
+date-released: 2024-06-18
+identifiers:
+  - description: UAV Swarm Autonomous Missions for Animal Ecology Remote Sensing Studies
+    type: url
+    value: https://github.com/jennamk14/autonomous_drone_simulator
+keywords:
+  - imageomics
+  - drone
+  - simulation
+  - ecology
+  - herd
+license: null
+message: If you use this software, please cite it using these metadata.
+repository-code: UAV Swarm Autonomous Missions for Animal Ecology Remote Sensing Studies
+title: autonomous_drone_simulator
+version: 0.1.0
+doi: <DOI from Zenodo>
+type: software
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Kline
+      given-names: Jenna
+    - family-names: Stewart
+      given-names: Christopher
+    - family-names: Berger-Wolf
+      given-names: Tanya
+    - family-names: Ramirez
+      given-names: Michelle
+    - family-names: Stevens
+      given-names: Samuel
+    - family-names: Babu
+      given-names: Reshma Ramesh
+    - family-names: Banerji
+      given-names: Namrata
+    - family-names: Sheets
+      given-names: Alec
+    - family-names: Balasubramaniam
+      given-names: Sowbaranika
+    - family-names: Campolongo
+      given-names: Elizabeth
+    - family-names: Thompson
+      given-names: Matthew
+    - family-names: Stewart
+      given-names: Charles V.
+    - family-names: Kholiavchenko
+      given-names: Maksim
+    - family-names: Rubenstein
+      given-names: Daniel I.
+    - family-names: Van åTiel
+      given-names: Nina
+    - family-names: Miliko
+      given-names: Jackson
+  title: A Framework for Autonomic Computing for In Situ Imageomics
+  year: 2024
+  journal: 2023 IEEE International Conference on Autonomic Computing and
+    Self-Organizing Systems (ACSOS)
+  doi: 10.1109/ACSOS58161.2023.00018
