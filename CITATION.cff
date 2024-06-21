@@ -20,7 +20,7 @@ license: MIT
 message: If you use this software, please cite it using these metadata.
 repository-code: UAV Swarm Autonomous Missions for Animal Ecology Remote Sensing Studies
 title: autonomous_drone_simulator
-version: 0.1.0
+version: 1.0.0
 doi: <DOI from Zenodo>
 type: software
 preferred-citation:
