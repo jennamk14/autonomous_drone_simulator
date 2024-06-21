@@ -13,8 +13,6 @@ Developed for the paper: [A Framework for Autonomic Computing for In Situ Imageo
   booktitle={2023 IEEE International Conference on Autonomic Computing and Self-Organizing Systems (ACSOS)}, 
   title={A Framework for Autonomic Computing for In Situ Imageomics}, 
   year={2023},
-  volume={},
-  number={},
   pages={11-16},
   keywords={Social groups;Ecosystems;Wildlife;Machine learning;Data collection;Cameras;Object recognition;autonomous flight;UAVs;ecology;machine learning;computer vision;imageomics},
   doi={10.1109/ACSOS58161.2023.00018}}
