@@ -11,12 +11,13 @@ import pysrt
 import time
 import xarray as xr
 
-file_location = "/users/PAS2136/kline377/kenya_drones/data/18_01_2023_session_6/"
+# To do: update file location to match your own
+file_location = "/data/18_01_2023_session_6/"
 # file_location = "/18_01_2023_session_6/" # path to original flight data
 file_name = "Jan-18th-2023-12-09PM-Flight-Airdata.csv" # file name of telemetry data
 flight_record = pd.read_csv(file_location+file_name) # read in telemetry data
 
-save_location = "/users/PAS2136/kline377/kenya_drones/simulator/data/" # path to save cube data
+save_location = "/simulator/data/" # path to save cube data
 
 # Note on frames: 
 # - Airdata exports data for every 100 ms, or 10 per second, or 600 per minute

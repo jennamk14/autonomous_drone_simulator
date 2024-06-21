@@ -10,9 +10,10 @@ import cv2
 import autonomous_herd_tracking as aht # Replace with your own path
 
 # Load the autonomy cube data to test the autonomous navigation policy on
+# Update the file location and video file name to test the autonomous navigation policy on a different video
 file_location = 'data/'
-video_file = 'DJI_0063' 
-frame_location = '/users/PAS2136/kline377/kenya_drones/data/18_01_2023_session_6/' + video_file + '/frames/'
+video_file = 'DJI_0063'
+frame_location = '/data/18_01_2023_session_6/' + video_file + '/frames/'
 autonomy_cube = pd.read_csv(file_location + video_file + "/" + video_file + "_flight_record.csv")
 cube = xr.open_dataset(file_location + video_file + "/" + video_file + "_cube.nc")
 
